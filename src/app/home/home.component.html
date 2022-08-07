@@ -1,0 +1,12 @@
+<po-page-default p-title="Visão geral dos dados"> 
+    <po-table 
+        [p-items]="view_items"
+        (p-show-more)="onShowMore($event)"
+        [p-loading]="tableLoading"
+        [p-loading-show-more]="showMoreLoading"
+        [p-columns]="columns"
+        p-container="shadow"
+        [p-literals]="customLiterals"
+        [p-striped]="true"> 
+    </po-table>
+</po-page-default>
