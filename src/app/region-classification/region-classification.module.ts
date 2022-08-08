@@ -1,16 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RegionClassificationComponent } from './region-classification.component';
 import { PoFieldModule, PoModule } from '@po-ui/ng-components';
-import { HomeRoutingModule } from './home-routing.module';
-import { HomeComponent } from './home.component';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { FormsModule } from '@angular/forms';
+import { RegionClassificationRoutingModule } from './region-classification-routing.module';
 
-@NgModule({
-  declarations: [HomeComponent],
+
+@NgModule({    
+  declarations: [RegionClassificationComponent],
   imports: [
     CommonModule,
-    HomeRoutingModule,
+    RegionClassificationRoutingModule,
     PoModule,
     FormsModule,
     PoFieldModule,
@@ -19,4 +20,4 @@ import { FormsModule } from '@angular/forms';
     })
   ]
 })
-export class HomeModule { }
+export class RegionClassificationModule { }

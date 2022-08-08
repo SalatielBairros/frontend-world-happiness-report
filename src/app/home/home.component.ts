@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { PoTableColumn, PoTableLiterals } from '@po-ui/ng-components';
+import { PoSelectOption, PoTableColumn, PoTableLiterals } from '@po-ui/ng-components';
 import { CountryData } from '../models/country-data.model';
+import { Metrics } from '../models/metrics.model';
 import { DataService } from '../services/data.service';
 
 @Component({
@@ -13,7 +14,12 @@ export class HomeComponent implements OnInit {
 
   constructor(private service: DataService) { }
 
+  public selectedCountry: string = '';
+  public selectedMetric: string = '';
+  public selectedRegion: string = '';
+  public chartInstance: any;
   public all_items: Array<CountryData> = [];
+  public grouped_data: Array<Metrics> = [];
   public tableLoading: boolean = true;
   public showMoreLoading: boolean = false;
   public view_items: Array<CountryData> = [];
@@ -93,16 +99,85 @@ export class HomeComponent implements OnInit {
     seeCompleteSubtitle: 'Mostrar legenda completa',
     completeSubtitle: 'Todas legendas'
   };
+  public graphOptions: any = null;
+  public updatedOptions: any = null;
+  public countries: Array<PoSelectOption> = []
+  public regions: Array<PoSelectOption> = []
 
   private page_size: number = 10;
   private current_page: number = 1;
 
   ngOnInit(): void {
     this.current_page = 1;
+    this.loadTable();
+    this.loadCountriesDrop();
+    this.loadRegionsDrop();
+    this.loadGraph();
+  }
+
+  private loadRegionsDrop() {
+    this.service.getRegions().subscribe({
+      next: (data) => {
+        this.regions = data.map(item => <PoSelectOption>{
+          value: item,
+          label: item
+        });
+        this.regions.unshift(<PoSelectOption>{
+          value: '',
+          label: 'Selecione...'
+        });
+      }
+    });
+  }
+
+  private loadCountriesDrop() {
+    this.service.getCountries().subscribe({
+      next: (data) => {
+        this.countries = data.map(item => <PoSelectOption>{
+          value: item,
+          label: item
+        });
+        this.countries.unshift(<PoSelectOption>{
+          value: '',
+          label: 'Selecione...'
+        });
+      }
+    });
+  }
+
+  private loadGraph(country: string = '', region: string = '') {
+    this.service.getGroupedData('year', country, region).subscribe({
+      next: (data) => {
+        this.grouped_data = data;
+        this.graphOptions = {
+          xAxis: {
+            type: 'category',
+            data: data.map(item => item.year)
+          },
+          yAxis: {
+            type: 'value'
+          },
+          grid: {
+            left: '0',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+          },
+          series: [{
+            name: 'Dados',
+            type: 'line',
+            data: data.map(item => item.score)
+          }]
+        };
+      }
+    });
+  }
+
+  private loadTable() {
     this.service.getProcessedData().subscribe(
       {
         next: (data) => {
-          this.all_items = data
+          this.all_items = data;
           this.view_items = this.all_items.slice(0, this.page_size);
         },
         error: (err) => console.error(err),
@@ -110,11 +185,35 @@ export class HomeComponent implements OnInit {
       });
   }
 
-  public onShowMore(event: any): void {    
+  public onShowMore(event: any): void {
     this.showMoreLoading = true;
     console.log(event);
     this.current_page++;
     this.view_items = this.all_items.slice(0, this.page_size * this.current_page);
     this.showMoreLoading = false;
+  }
+
+  public onMetricChange(event: string): void {
+    this.selectedMetric = event;
+  }
+
+  public onCountryChange(event: string): void {
+    this.selectedCountry = event;
+  }
+
+  public onRegionChange(event: string): void {
+    this.selectedRegion = event;
+  }
+
+  public onClickFilter(): void {
+    this.service.getGroupedData('year', this.selectedCountry, this.selectedRegion).subscribe({
+      next: (data) => {
+        this.updatedOptions = {
+          series: [{
+            data: data.map(x => (<any>x)[this.selectedMetric])
+          }]
+        };
+      }
+    });
   }
 }

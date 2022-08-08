@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PoFieldModule, PoModule } from '@po-ui/ng-components';
-import { HomeRoutingModule } from './home-routing.module';
-import { HomeComponent } from './home.component';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { FormsModule } from '@angular/forms';
+import { ScoreRegressionComponent } from './score-regression.component';
+import { ScoreRegressionRoutingModule } from './score-regression-routing.module';
 
 @NgModule({
-  declarations: [HomeComponent],
+  declarations: [ScoreRegressionComponent],
   imports: [
     CommonModule,
-    HomeRoutingModule,
+    ScoreRegressionRoutingModule,
     PoModule,
     FormsModule,
     PoFieldModule,
@@ -19,4 +19,4 @@ import { FormsModule } from '@angular/forms';
     })
   ]
 })
-export class HomeModule { }
+export class ScoreRegressionModule { }

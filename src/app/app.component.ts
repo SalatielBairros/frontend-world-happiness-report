@@ -12,9 +12,18 @@ export class AppComponent {
   public readonly AppName: string = 'World Happiness Report';
 
   readonly menus: Array<PoMenuItem> = [
-    { label: 'Home', action: this.onClick.bind(this) },
-    { label: 'Regressão score', action: this.onClick.bind(this) },
-    { label: 'Classificação região', action: this.onClick.bind(this) },
+    {
+      label: 'Home',
+      link: '/'
+    },
+    {
+      label: 'Regressão score',
+      link: '/models/score-regression'
+    },
+    {
+      label: 'Classificação região',
+      link: '/models/region-classification'
+    },
     { label: 'Impacto Pandemia', action: this.onClick.bind(this) },
     { label: 'Sobre', action: this.onClick.bind(this) },
   ];

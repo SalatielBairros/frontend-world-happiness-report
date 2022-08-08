@@ -1,0 +1,13 @@
+<po-page-default p-title="Resultados modelos de regressão do score">
+    <div class="po-row">
+        <div class="po-md-3">
+            <po-select name="metric" p-label="Métrica" p-placeholder="R²"
+                (p-change)="onMetricChange($event)" [p-options]="metrics" [p-required]="false">
+            </po-select>
+        </div>
+    </div>
+    <div echarts [loading]="isGraphLoading" [options]="graphOptions" [merge]="updatedOptions" ></div>
+    <h2>Feature Importance KNN</h2>
+    <div echarts [loading]="isGraphLoading" [options]="graphImportancesOptions" [merge]="updatedImportancesOptions" ></div>    
+    <h2>Feature Importance Random Forest</h2>
+</po-page-default>
