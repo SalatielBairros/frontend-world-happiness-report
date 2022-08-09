@@ -6,12 +6,10 @@ import { AppComponent } from './app.component';
 import { PoModule } from '@po-ui/ng-components';
 import { RouterModule } from '@angular/router';
 import { HomeModule } from './home/home.module';
-import { PandemicImpactComponent } from './pandemic-impact/pandemic-impact.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    PandemicImpactComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,

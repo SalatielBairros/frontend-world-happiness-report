@@ -13,6 +13,14 @@ const routes: Routes = [
   {
     path: 'models/region-classification',
     loadChildren: () => import('./region-classification/region-classification.module').then(m => m.RegionClassificationModule)
+  },
+  {
+    path: 'about',
+    loadChildren: () => import('./about/about.module').then(m => m.AboutModule)
+  },
+  {
+    path: 'pandemic-impact',
+    loadChildren: () => import('./pandemic-impact/pandemic-impact.module').then(m => m.PandemicImpactModule)
   }
 ];
 

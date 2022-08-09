@@ -15,6 +15,7 @@ import { RegionClassificationRoutingModule } from './region-classification-routi
     PoModule,
     FormsModule,
     PoFieldModule,
+    NgxEchartsModule,
     NgxEchartsModule.forRoot({
       echarts: () => import('echarts')
     })

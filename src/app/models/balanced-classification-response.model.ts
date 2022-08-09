@@ -1,6 +1,6 @@
-import { RegionClassificationModule } from "../region-classification/region-classification.module";
+import { RegionClassificationEvaluation } from "./region-classification-evaluation.model";
 
 export interface BalancedClassificationResponse {
-    test_data_evaluation: RegionClassificationModule
-    validation_data_evaluation: RegionClassificationModule
+    test_data_evaluation: RegionClassificationEvaluation
+    validation_data_evaluation: RegionClassificationEvaluation
 }

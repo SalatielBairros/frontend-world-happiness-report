@@ -24,12 +24,13 @@ export class AppComponent {
       label: 'Classificação região',
       link: '/models/region-classification'
     },
-    { label: 'Impacto Pandemia', action: this.onClick.bind(this) },
-    { label: 'Sobre', action: this.onClick.bind(this) },
+    {
+      label: 'Impacto Pandemia',
+      link: '/pandemic-impact'
+    },
+    {
+      label: 'Sobre',
+      link: '/about'
+    },
   ];
-
-  private onClick() {
-    alert('Clicked in menu item')
-  }
-
 }
