@@ -6,8 +6,9 @@
             </po-select>
         </div>
     </div>
-    <div echarts [loading]="isGraphLoading" [options]="graphOptions" [merge]="updatedOptions" ></div>
+    <div echarts [options]="graphOptions" [merge]="updatedOptions" ></div>
     <h2>Feature Importance KNN</h2>
-    <div echarts [loading]="isGraphLoading" [options]="graphImportancesOptions" [merge]="updatedImportancesOptions" ></div>    
+    <div echarts [options]="graphKnnImportancesOptions" [merge]="updatedKnnImportancesOptions" ></div>    
     <h2>Feature Importance Random Forest</h2>
+    <div echarts [options]="graphRfImportancesOptions" [merge]="updatedRfImportancesOptions" ></div>    
 </po-page-default>

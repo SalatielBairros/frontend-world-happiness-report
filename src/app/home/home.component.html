@@ -2,7 +2,7 @@
     <div class="po-row">
         <div class="po-md-3">
             <po-select name="selectedMetric" p-label="Métrica para visualização"
-                p-placeholder="Selecione a métrica para o gráfico" (p-change)="onMetricChange($event)" [p-options]="[
+                p-placeholder="Score" (p-change)="onMetricChange($event)" [p-options]="[
             { label: 'Score', value: 'score' },
             { label: 'GDP', value: 'gdp' },
             { label: 'HLE', value: 'hle' },

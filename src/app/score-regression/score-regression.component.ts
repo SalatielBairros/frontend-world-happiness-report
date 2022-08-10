@@ -15,10 +15,11 @@ export class ScoreRegressionComponent implements OnInit {
   public evaluations: any = {}
   public years: Array<number> = [2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021]
   public graphOptions: any = null;
-  public graphImportancesOptions: any = null;
   public updatedOptions: any = null;
-  public updatedImportancesOptions: any = null;
-  public isGraphLoading: boolean = false;
+  public graphKnnImportancesOptions: any = null;
+  public updatedKnnImportancesOptions: any = null;
+  public graphRfImportancesOptions: any = null;
+  public updatedRfImportancesOptions: any = null;
   public metrics: Array<PoSelectOption> = [
     {
       label: 'R²',
@@ -39,7 +40,6 @@ export class ScoreRegressionComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadGraph()
-    this.isGraphLoading = true;
     this.service.getScoreRegressionEvaluation('knn').subscribe({
       next: (data) => {
         this.evaluations['knn'] = data
@@ -57,7 +57,7 @@ export class ScoreRegressionComponent implements OnInit {
             data: value
           })
         }
-        this.updatedImportancesOptions = {
+        this.updatedKnnImportancesOptions = {
           series: series,
           legend: {
             data: Object.keys(features_knn)
@@ -68,6 +68,26 @@ export class ScoreRegressionComponent implements OnInit {
           next: (data) => {
             this.evaluations['random-forest'] = data
             this.onMetricChange('r2');
+
+            let features_rf: any = {}
+            data[0].importances.map(i => i[0]).forEach(x => features_rf[x] = [])
+            data.forEach(x => x.importances.forEach(i => features_rf[i[0]].push(i[1])))
+
+            let series = []
+            for (const [key, value] of Object.entries(features_rf)) {
+              series.push({
+                name: key,
+                type: 'bar',
+                stack: 'counts',
+                data: value
+              })
+            }
+            this.updatedRfImportancesOptions = {
+              series: series,
+              legend: {
+                data: Object.keys(features_rf)
+              }
+            }
           },
         });
       },
@@ -122,17 +142,12 @@ export class ScoreRegressionComponent implements OnInit {
       }],
       tooltip: {}
     };
-    this.graphImportancesOptions = {
+    this.graphKnnImportancesOptions = {
       xAxis: {
         type: 'category',
-        data: this.years
       },
       yAxis: {
         type: 'value'
-      },
-      legend: {
-        data: ['KNN', 'Random Forest'],
-        align: 'left',
       },
       grid: {
         left: '0',
@@ -142,6 +157,20 @@ export class ScoreRegressionComponent implements OnInit {
       },
       tooltip: {}
     };
-    this.isGraphLoading = false;
+    this.graphRfImportancesOptions = {
+      xAxis: {
+        type: 'category',
+      },
+      yAxis: {
+        type: 'value'
+      },
+      grid: {
+        left: '0',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+      },
+      tooltip: {}
+    };
   }
 }
