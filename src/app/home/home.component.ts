@@ -163,6 +163,7 @@ export class HomeComponent implements OnInit {
             bottom: '3%',
             containLabel: true
           },
+          tooltip: {},
           series: [{
             name: 'Dados',
             type: 'line',

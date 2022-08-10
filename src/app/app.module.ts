@@ -6,7 +6,6 @@ import { AppComponent } from './app.component';
 import { PoModule } from '@po-ui/ng-components';
 import { RouterModule } from '@angular/router';
 import { HomeModule } from './home/home.module';
-
 @NgModule({
   declarations: [
     AppComponent

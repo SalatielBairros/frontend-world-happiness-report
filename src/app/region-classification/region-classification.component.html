@@ -12,5 +12,11 @@
         </div>
     </div>
     <h2>Dados Balanceados: teste vs validação</h2>
-    <h2>Métricas por região</h2>
+    <div style="max-width: 1200px; overflow: auto">
+        <div echarts [options]="balancedGraphOptions" [merge]="balancedUpdatedOptions" [autoResize]="false" [initOpts]="{width: 2000 }">
+        </div>
+    </div>
+    <h2>Matriz de confusão KNN</h2>    
+    <div id="knn_confusion_matrix"></div>
+    <h2>Feature Importances</h2>
 </po-page-default>
