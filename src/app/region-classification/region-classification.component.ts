@@ -173,12 +173,6 @@ export class RegionClassificationComponent implements OnInit {
         data: ['KNN', 'KNN Balanceado', 'Random Forest', 'Random Forest Balanceado'],
         align: 'left',
       },
-      z: 10,
-      dataZoom: [
-        {
-          type: 'inside',
-        },
-      ],
       grid: {
         left: '0',
         right: '4%',
@@ -203,12 +197,6 @@ export class RegionClassificationComponent implements OnInit {
         data: ['KNN Balanceado (Validação)', 'KNN Balanceado (Teste)', 'Random Forest Balanceado (Validação)', 'Random Forest Balanceado (Teste)'],
         align: 'left',
       },
-      z: 10,
-      dataZoom: [
-        {
-          type: 'inside',
-        },
-      ],
       grid: {
         left: '0',
         right: '4%',
