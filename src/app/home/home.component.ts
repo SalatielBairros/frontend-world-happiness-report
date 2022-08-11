@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { PoSelectOption, PoTableColumn, PoTableLiterals } from '@po-ui/ng-components';
+import { PoSelectOption, PoTableColumn, PoTableColumnSortType, PoTableLiterals } from '@po-ui/ng-components';
 import { CountryData } from '../models/country-data.model';
 import { Metrics } from '../models/metrics.model';
 import { DataService } from '../services/data.service';
@@ -206,6 +206,18 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  public onTableSorting(order: { column?: PoTableColumn | undefined, type: PoTableColumnSortType | undefined }): void {
+    this.current_page = 1
+    this.all_items.sort((a, b) => {
+      return (<any>a)[order.column?.property ?? 'score'] > (<any>b)[order.column?.property ?? 'score'] ? 1 : -1;
+    });
+
+    if(order.type == PoTableColumnSortType.Descending) {
+      this.all_items = this.all_items.reverse()
+    }
+    this.view_items = this.all_items.slice(0, this.page_size);
+  }
+
   private loadTable() {
     this.service.getProcessedData().subscribe(
       {
@@ -223,20 +235,52 @@ export class HomeComponent implements OnInit {
     this.service.getCorrelations().subscribe({
       next: (data) => {
         let keys = Object.keys(data);
+        let zValues: any = Object.values(data)
 
         var graph_data = [
           {
-            z: Object.values(data),
+            z: zValues,
             x: keys,
             y: keys,
             type: 'heatmap',
             hoverongaps: false,
-            colorscale: 'Greys',
+            colorscale: 'RdBu',
             reversescale: true,
             showscale: false
           }
         ];
-        Plotly.newPlot(element, graph_data);
+
+        var layout = {
+          annotations: []
+        };
+
+        for ( var i = 0; i < keys.length; i++ ) {
+          for ( var j = 0; j < keys.length; j++ ) {
+            var currentValue = zValues[i][j];
+            if (currentValue != 0.0) {
+              var textColor = 'white';
+            }else{
+              var textColor = 'black';
+            }
+            var result: any = {
+              xref: 'x1',
+              yref: 'y1',
+              x: keys[j],
+              y: keys[i],
+              text: (<number>zValues[i][j]).toFixed(2),
+              font: {
+                family: 'Arial',
+                size: 12,
+                // color: 'rgb(50, 171, 96)'
+                color: textColor
+              },
+              showarrow: false
+            };
+            layout.annotations.push(<never>result);
+          }
+        }
+
+        Plotly.newPlot(element, graph_data, layout);
       }
     });
   }

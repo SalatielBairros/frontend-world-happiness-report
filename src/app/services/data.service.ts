@@ -64,6 +64,7 @@ export class DataService {
   }
 
   public getCorrelations(): Observable<any> {    
-    return this.http.get<any>('data-ingestion/ingested/processed-data/correlations');
+    let columns = "year,score,gdp,social_support,hle,freedom,generosity,corruption,positive_affect,negative_affect"
+    return this.http.get<any>(`data-ingestion/ingested/processed-data/correlations?columns=${columns}`);
   }
 }

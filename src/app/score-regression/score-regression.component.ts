@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { PoSelectOption } from '@po-ui/ng-components';
-import { RegressionModelEvaluation } from '../models/regression-model-evaluation.model';
 import { MlModelsService } from '../services/ml-models.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-score-regression',
   templateUrl: './score-regression.component.html',
-  styleUrls: ['./score-regression.component.less']
+  styleUrls: ['./score-regression.component.less'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class ScoreRegressionComponent implements OnInit {
 
@@ -40,58 +41,54 @@ export class ScoreRegressionComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadGraph()
-    this.service.getScoreRegressionEvaluation('knn').subscribe({
-      next: (data) => {
-        this.evaluations['knn'] = data
+    let knn = this.service.getScoreRegressionEvaluation('knn');
+    let randomForest = this.service.getScoreRegressionEvaluation('random-forest');
+    forkJoin([knn, randomForest]).subscribe((result) => {
+      this.evaluations['knn'] = result[0]
 
-        let features_knn: any = {}
-        data[0].importances.map(i => i[0]).forEach(x => features_knn[x] = [])
-        data.forEach(x => x.importances.forEach(i => features_knn[i[0]].push(i[1])))
+      let features_knn: any = {}
+      result[0][0].importances.map(i => i[0]).forEach(x => features_knn[x] = [])
+      result[0].forEach(x => x.importances.forEach(i => features_knn[i[0]].push(i[1])))
 
-        let series = []
-        for (const [key, value] of Object.entries(features_knn)) {
-          series.push({
-            name: key,
-            type: 'bar',
-            stack: 'counts',
-            data: value
-          })
+      let series_knn = []
+      for (const [key, value] of Object.entries(features_knn)) {
+        series_knn.push({
+          name: key,
+          type: 'bar',
+          stack: 'counts',
+          data: value
+        })
+      }
+      this.updatedKnnImportancesOptions = {
+        series: series_knn,
+        legend: {
+          data: Object.keys(features_knn)
         }
-        this.updatedKnnImportancesOptions = {
-          series: series,
-          legend: {
-            data: Object.keys(features_knn)
-          }
+      };
+
+      this.evaluations['random-forest'] = result[1]
+      this.onMetricChange('r2');
+
+      let features_rf: any = {}
+      result[1][0].importances.map(i => i[0]).forEach(x => features_rf[x] = [])
+      result[1].forEach(x => x.importances.forEach(i => features_rf[i[0]].push(i[1])))
+
+      let series_rf = []
+      for (const [key, value] of Object.entries(features_rf)) {
+        series_rf.push({
+          name: key,
+          type: 'bar',
+          stack: 'counts',
+          data: value
+        })
+      }
+      this.updatedRfImportancesOptions = {
+        series: series_rf,
+        legend: {
+          data: Object.keys(features_rf)
         }
-
-        this.service.getScoreRegressionEvaluation('random-forest').subscribe({
-          next: (data) => {
-            this.evaluations['random-forest'] = data
-            this.onMetricChange('r2');
-
-            let features_rf: any = {}
-            data[0].importances.map(i => i[0]).forEach(x => features_rf[x] = [])
-            data.forEach(x => x.importances.forEach(i => features_rf[i[0]].push(i[1])))
-
-            let series = []
-            for (const [key, value] of Object.entries(features_rf)) {
-              series.push({
-                name: key,
-                type: 'bar',
-                stack: 'counts',
-                data: value
-              })
-            }
-            this.updatedRfImportancesOptions = {
-              series: series,
-              legend: {
-                data: Object.keys(features_rf)
-              }
-            }
-          },
-        });
-      },
-    });
+      }
+    });    
   }
 
   public onMetricChange(event: any): void {

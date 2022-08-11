@@ -7,7 +7,8 @@ import { DataService } from '../services/data.service';
 @Component({
   selector: 'app-pandemic-impact',
   templateUrl: './pandemic-impact.component.html',
-  styleUrls: ['./pandemic-impact.component.less']
+  styleUrls: ['./pandemic-impact.component.less'],
+  encapsulation: ViewEncapsulation.None
 })
 export class PandemicImpactComponent implements OnInit {
 

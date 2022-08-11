@@ -1,8 +1,8 @@
 <po-page-default p-title="Visão geral dos dados">
     <div class="po-row">
         <div class="po-md-3">
-            <po-select name="selectedMetric" p-label="Métrica para visualização"
-                p-placeholder="Score" (p-change)="onMetricChange($event)" [p-options]="[
+            <po-select name="selectedMetric" p-label="Métrica para visualização" p-placeholder="Score"
+                (p-change)="onMetricChange($event)" [p-options]="[
             { label: 'Score', value: 'score' },
             { label: 'GDP', value: 'gdp' },
             { label: 'HLE', value: 'hle' },
@@ -26,7 +26,7 @@
                 (p-change)="onRegionChange($event)" [p-options]="regions">
             </po-select>
         </div>
-        <div class="po-md-3">
+        <div class="po-md-3 custom-button">
             <div class="po-field-container-title"><span class="po-field-title">&nbsp;</span></div>
             <po-button p-label="Filtrar" (p-click)="onClickFilter()"> </po-button>
         </div>
@@ -36,10 +36,10 @@
     <div echarts [options]="graphOptions" [merge]="updatedOptions"></div>
 
     <h2>Matriz de correlação</h2>
-    <div id="corr_matrix"></div>    
+    <div id="corr_matrix" style="max-width: 90%; height: 900px; margin-left: 32px"></div>
     <h2>Dados processados</h2>
     <po-table [p-items]="view_items" (p-show-more)="onShowMore($event)" [p-loading]="tableLoading"
         [p-loading-show-more]="showMoreLoading" [p-columns]="columns" p-container="shadow" [p-literals]="customLiterals"
-        [p-striped]="true">
+        [p-striped]="true" [p-sort]="true" (p-sort-by)="onTableSorting($event)">
     </po-table>
 </po-page-default>
