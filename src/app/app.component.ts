@@ -13,8 +13,12 @@ export class AppComponent {
 
   readonly menus: Array<PoMenuItem> = [
     {
-      label: 'Home',
+      label: 'Sobre o projeto',
       link: '/'
+    },
+    {
+      label: 'Visão geral dos dados',
+      link: '/data'
     },
     {
       label: 'Regressão score',
@@ -27,10 +31,6 @@ export class AppComponent {
     {
       label: 'Impacto Pandemia',
       link: '/pandemic-impact'
-    },
-    {
-      label: 'Sobre',
-      link: '/about'
-    },
+    }    
   ];
 }

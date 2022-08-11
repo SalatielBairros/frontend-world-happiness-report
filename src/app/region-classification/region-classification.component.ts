@@ -46,37 +46,37 @@ export class RegionClassificationComponent implements OnInit {
       next: (results) => {
         this.regions = results[0];
 
-        let element = document.getElementById('knn_confusion_matrix');
+        this.plotConfusionMatrix(this.regions, results[2].validation_data_evaluation.confusion_matrix, 'knn_confusion_matrix');
+        this.plotConfusionMatrix(this.regions, results[4].validation_data_evaluation.confusion_matrix, 'rf_confusion_matrix');        
 
-        const reducer = (accumulator: number, curr: number) => accumulator + curr;
-        let confusion_matrix: Array<Array<number>> = []
-        results[2].validation_data_evaluation.confusion_matrix.forEach((row, index) => {
-          let sum = row.reduce(reducer);
-          let new_array: Array<number> = [];
-
-          row.forEach((element) => {
-            new_array.push(element / sum);
-          });
-
-          confusion_matrix.push(new_array);
+        let fi_element = document.getElementById('feature_importance_graph');
+        let knn_fi_x: Array<string> = []
+        let knn_fi_y: Array<number> = []
+        results[2].validation_data_evaluation.feature_importances.forEach(x => {
+          knn_fi_x.push(x[0]);
+          knn_fi_y.push(x[1]);
         });
+        let series_knn = {
+          name: 'KNN',
+          type: 'bar',
+          x: knn_fi_x,
+          y: knn_fi_y,
+        }
 
-        var data = [
-          {
-            z: confusion_matrix,
-            x: results[0],
-            y: results[0],
-            type: 'heatmap',
-            hoverongaps: false,
-            colorscale: 'Greys',
-            reversescale: true,
-            showscale: false
-          }
-        ];
-        var layout = {
-          with: 500
-        };
-        Plotly.newPlot(element, data, layout);
+        let rf_fi_x: Array<string> = []
+        let rf_fi_y: Array<number> = []
+        results[4].validation_data_evaluation.feature_importances.forEach(x => {
+          rf_fi_x.push(x[0]);
+          rf_fi_y.push(x[1]);
+        });
+        let series_rf = {
+          name: 'Random Forest',
+          type: 'bar',
+          x: rf_fi_x,
+          y: rf_fi_y,
+        }
+        var layout = {barmode: 'group'};
+        Plotly.newPlot(fi_element, [series_knn, series_rf], layout);
 
         this.label_metrics.map(m => m.value).forEach(m => {
           this.graphData[m] = []
@@ -152,6 +152,7 @@ export class RegionClassificationComponent implements OnInit {
             data: balanced_test_rf_series
           });
         });
+
         this.loadGraph(this.regions, this.graphData['precision']);
         this.loadComparsionGraph(this.regions, this.comparsionData['precision']);
       },
@@ -184,6 +185,15 @@ export class RegionClassificationComponent implements OnInit {
     };
   }
 
+  public onMetricChange(event: any): void {
+    this.updatedOptions = {
+      series: this.graphData[event]
+    };
+    this.balancedUpdatedOptions = {
+      series: this.comparsionData[event]
+    };
+  }
+
   private loadComparsionGraph(xAxis: string[], series: any[]) {
     this.balancedGraphOptions = {
       xAxis: {
@@ -208,12 +218,33 @@ export class RegionClassificationComponent implements OnInit {
     };
   }
 
-  public onMetricChange(event: any): void {
-    this.updatedOptions = {
-      series: this.graphData[event]
-    };
-    this.balancedUpdatedOptions = {
-      series: this.comparsionData[event]
-    };
+  private plotConfusionMatrix(labels: Array<string>, data: Array<Array<number>>, element_id: any) {
+    let element = document.getElementById(element_id);
+    const reducer = (accumulator: number, curr: number) => accumulator + curr;
+    let confusion_matrix: Array<Array<number>> = []
+    data.forEach((row, index) => {
+      let sum = row.reduce(reducer);
+      let new_array: Array<number> = [];
+
+      row.forEach((e) => {
+        new_array.push(e / sum);
+      });
+
+      confusion_matrix.push(new_array);
+    });
+
+    var graph_data = [
+      {
+        z: confusion_matrix,
+        x: labels,
+        y: labels,
+        type: 'heatmap',
+        hoverongaps: false,
+        colorscale: 'Greys',
+        reversescale: true,
+        showscale: false
+      }
+    ];
+    Plotly.newPlot(element, graph_data);
   }
 }
