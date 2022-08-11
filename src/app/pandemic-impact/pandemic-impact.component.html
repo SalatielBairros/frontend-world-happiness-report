@@ -1,1 +1,38 @@
-<po-page-default p-title="Comportamento dos países na pandemia"></po-page-default>
+<po-page-default p-title="Comportamento dos países na pandemia">
+    <div class="po-row">
+        <div class="po-md-3">
+            <po-select name="selectedMetric" p-label="Métrica para visualização"
+                p-placeholder="Score" (p-change)="onMetricChange($event)" [p-options]="[
+            { label: 'Score', value: 'score' },
+            { label: 'GDP', value: 'gdp' },
+            { label: 'HLE', value: 'hle' },
+            { label: 'Liberdade', value: 'freedom' },
+            { label: 'Generosidade', value: 'generosity' },
+            { label: 'Corrupção', value: 'corruption' },
+            { label: 'Suporte Social', value: 'social_support' },
+            { label: 'Afeição Positiva', value: 'positive_affect' },
+            { label: 'Afeição Negativa', value: 'negative_affect' }
+        ]">
+            </po-select>
+        </div>
+        <div class="po-md-3">
+            <po-select name="country" p-label="Pais" p-placeholder="Selecione um país"
+                (p-change)="onCountryChange($event)" [p-options]="countries" [p-required]="false">
+            </po-select>
+        </div>
+
+        <div class="po-md-3">
+            <po-select name="region" p-label="Região" p-placeholder="Selecione uma região"
+                (p-change)="onRegionChange($event)" [p-options]="regions">
+            </po-select>
+        </div>
+        <div class="po-md-3">
+            <div class="po-field-container-title"><span class="po-field-title">&nbsp;</span></div>
+            <po-button p-label="Filtrar" (p-click)="onClickFilter()"> </po-button>
+        </div>
+    </div>
+
+
+    <div echarts [options]="graphOptions" [merge]="updatedOptions"></div>
+    
+</po-page-default>

@@ -3,7 +3,7 @@ import { PoSelectOption, PoTableColumn, PoTableLiterals } from '@po-ui/ng-compon
 import { CountryData } from '../models/country-data.model';
 import { Metrics } from '../models/metrics.model';
 import { DataService } from '../services/data.service';
-
+declare var Plotly: any;
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -113,6 +113,7 @@ export class HomeComponent implements OnInit {
     this.loadCountriesDrop();
     this.loadRegionsDrop();
     this.loadGraph();
+    this.plotCorrelations();
   }
 
   private loadRegionsDrop() {
@@ -174,21 +175,8 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  private loadTable() {
-    this.service.getProcessedData().subscribe(
-      {
-        next: (data) => {
-          this.all_items = data;
-          this.view_items = this.all_items.slice(0, this.page_size);
-        },
-        error: (err) => console.error(err),
-        complete: () => this.tableLoading = false
-      });
-  }
-
   public onShowMore(event: any): void {
     this.showMoreLoading = true;
-    console.log(event);
     this.current_page++;
     this.view_items = this.all_items.slice(0, this.page_size * this.current_page);
     this.showMoreLoading = false;
@@ -214,6 +202,41 @@ export class HomeComponent implements OnInit {
             data: data.map(x => (<any>x)[this.selectedMetric])
           }]
         };
+      }
+    });
+  }
+
+  private loadTable() {
+    this.service.getProcessedData().subscribe(
+      {
+        next: (data) => {
+          this.all_items = data;
+          this.view_items = this.all_items.slice(0, this.page_size);
+        },
+        error: (err) => console.error(err),
+        complete: () => this.tableLoading = false
+      });
+  }
+
+  private plotCorrelations(): void {
+    let element = document.getElementById('corr_matrix');
+    this.service.getCorrelations().subscribe({
+      next: (data) => {
+        let keys = Object.keys(data);
+
+        var graph_data = [
+          {
+            z: Object.values(data),
+            x: keys,
+            y: keys,
+            type: 'heatmap',
+            hoverongaps: false,
+            colorscale: 'Greys',
+            reversescale: true,
+            showscale: false
+          }
+        ];
+        Plotly.newPlot(element, graph_data);
       }
     });
   }

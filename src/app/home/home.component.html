@@ -36,7 +36,7 @@
     <div echarts [options]="graphOptions" [merge]="updatedOptions"></div>
 
     <h2>Matriz de correlação</h2>
-    <h2>Presença de países na pesquisa por região</h2>
+    <div id="corr_matrix"></div>    
     <h2>Dados processados</h2>
     <po-table [p-items]="view_items" (p-show-more)="onShowMore($event)" [p-loading]="tableLoading"
         [p-loading-show-more]="showMoreLoading" [p-columns]="columns" p-container="shadow" [p-literals]="customLiterals"
