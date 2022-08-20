@@ -21,6 +21,7 @@ export class ScoreRegressionComponent implements OnInit {
   public updatedKnnImportancesOptions: any = null;
   public graphRfImportancesOptions: any = null;
   public updatedRfImportancesOptions: any = null;
+  public loadingMetrics: boolean = true;
   public metrics: Array<PoSelectOption> = [
     {
       label: 'R²',
@@ -88,6 +89,8 @@ export class ScoreRegressionComponent implements OnInit {
           data: Object.keys(features_rf)
         }
       }
+
+      this.loadingMetrics = false;
     });    
   }
 
@@ -142,6 +145,7 @@ export class ScoreRegressionComponent implements OnInit {
     this.graphKnnImportancesOptions = {
       xAxis: {
         type: 'category',
+        data: this.years
       },
       yAxis: {
         type: 'value'
@@ -157,6 +161,7 @@ export class ScoreRegressionComponent implements OnInit {
     this.graphRfImportancesOptions = {
       xAxis: {
         type: 'category',
+        data: this.years
       },
       yAxis: {
         type: 'value'

@@ -21,7 +21,10 @@ export class HomeComponent implements OnInit {
   public all_items: Array<CountryData> = [];
   public grouped_data: Array<Metrics> = [];
   public tableLoading: boolean = true;
+  public graphLoading: boolean = true;
+  public loadingCorrelations: boolean = true;
   public showMoreLoading: boolean = false;
+  public currentGraphData: Array<number> = [];
   public view_items: Array<CountryData> = [];
   public columns: Array<PoTableColumn> = [
     {
@@ -150,6 +153,7 @@ export class HomeComponent implements OnInit {
     this.service.getGroupedData('year', country, region).subscribe({
       next: (data) => {
         this.grouped_data = data;
+        this.currentGraphData = data.map(item => item.score)
         this.graphOptions = {
           xAxis: {
             type: 'category',
@@ -168,9 +172,10 @@ export class HomeComponent implements OnInit {
           series: [{
             name: 'Dados',
             type: 'line',
-            data: data.map(item => item.score)
+            data: this.currentGraphData
           }]
         };
+        this.graphLoading = false;
       }
     });
   }
@@ -195,13 +200,19 @@ export class HomeComponent implements OnInit {
   }
 
   public onClickFilter(): void {
+    this.graphLoading = true;
     this.service.getGroupedData('year', this.selectedCountry, this.selectedRegion).subscribe({
       next: (data) => {
+        if (this.selectedMetric == null || this.selectedMetric == '') {
+          this.selectedMetric = 'score';
+        }
+        this.currentGraphData = data.map(x => (<any>x)[this.selectedMetric]);
         this.updatedOptions = {
           series: [{
-            data: data.map(x => (<any>x)[this.selectedMetric])
+            data: this.currentGraphData
           }]
         };
+        this.graphLoading = false;
       }
     });
   }
@@ -212,7 +223,7 @@ export class HomeComponent implements OnInit {
       return (<any>a)[order.column?.property ?? 'score'] > (<any>b)[order.column?.property ?? 'score'] ? 1 : -1;
     });
 
-    if(order.type == PoTableColumnSortType.Descending) {
+    if (order.type == PoTableColumnSortType.Descending) {
       this.all_items = this.all_items.reverse()
     }
     this.view_items = this.all_items.slice(0, this.page_size);
@@ -251,15 +262,24 @@ export class HomeComponent implements OnInit {
         ];
 
         var layout = {
-          annotations: []
+          annotations: [],
+          width: 1200,
+          height: 600,
+          margin: {
+            l: 200,
+            r: 50,
+            b: 100,
+            t: 50,
+            pad: 4
+          },
         };
 
-        for ( var i = 0; i < keys.length; i++ ) {
-          for ( var j = 0; j < keys.length; j++ ) {
+        for (var i = 0; i < keys.length; i++) {
+          for (var j = 0; j < keys.length; j++) {
             var currentValue = zValues[i][j];
             if (currentValue != 0.0) {
               var textColor = 'white';
-            }else{
+            } else {
               var textColor = 'black';
             }
             var result: any = {
@@ -271,7 +291,6 @@ export class HomeComponent implements OnInit {
               font: {
                 family: 'Arial',
                 size: 12,
-                // color: 'rgb(50, 171, 96)'
                 color: textColor
               },
               showarrow: false
@@ -281,6 +300,7 @@ export class HomeComponent implements OnInit {
         }
 
         Plotly.newPlot(element, graph_data, layout);
+        this.loadingCorrelations = false;
       }
     });
   }

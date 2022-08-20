@@ -1,14 +1,63 @@
 <po-page-default p-title="Resultados modelos de regressão do score">
     <div class="po-row">
+        <div class="po-md-12">
+            <p>A previsão do Score através dos índices presentes na pesquisa é o objetivo principal do presente
+                trabalho. Conforme pode ser visto na etapa de análise no código-fonte, vários algoritmos diferentes
+                foram testados, sendo o KNN e o Random Forest os dois com melhor performance em todas as métricas de
+                avaliação utilizadas. Abaixo podemos ver uma comparação entre os dois e sua performance utilizando a
+                validação cruzada anual, onde os dados são divididos por ano e cada um dos anos utilizado como dados de
+                teste.</p>
+        </div>
+    </div>
+    <div class="po-row">
         <div class="po-md-3">
-            <po-select name="metric" p-label="Métrica" p-placeholder="R²"
-                (p-change)="onMetricChange($event)" [p-options]="metrics" [p-required]="false">
+            <po-select name="metric" p-label="Métrica" p-placeholder="R²" (p-change)="onMetricChange($event)"
+                [p-options]="metrics" [p-required]="false">
             </po-select>
         </div>
     </div>
-    <div echarts [options]="graphOptions" [merge]="updatedOptions" ></div>
-    <h2>Feature Importance KNN</h2>
-    <div echarts [options]="graphKnnImportancesOptions" [merge]="updatedKnnImportancesOptions" ></div>    
-    <h2>Feature Importance Random Forest</h2>
-    <div echarts [options]="graphRfImportancesOptions" [merge]="updatedRfImportancesOptions" ></div>    
+    <div echarts [options]="graphOptions" [merge]="updatedOptions"></div>
+    <div class="no-data" *ngIf="loadingMetrics">
+        <span>Carregando...</span>
+    </div>
+    <div class="po-row">
+        <div class="po-md-12">
+            <h2>Feature Importance KNN</h2>
+        </div>
+        <div class="po-md-12">
+            <p>Abaixo podemos ver uma explicação visual do algoritmo KNN. É possível notar que os atributos mais
+                relevantes
+                para o resultado foram o GDP e a Região do mundo. Com isso, ao observarmos o KNN, poderíamos formular
+                uma
+                hipótese de que a condição financeira é determinante para a percepção de felicidade, mas a importância
+                disso
+                ainda assim varia por região do mundo. Ou seja, a percepção do impacto da renda na felicidade é
+                diferente ao
+                redor do mundo, ainda que seja relevante em todos os lugares.</p>
+        </div>
+    </div>
+    <div echarts [options]="graphKnnImportancesOptions" [merge]="updatedKnnImportancesOptions"></div>
+    <div class="no-data" *ngIf="loadingMetrics">
+        <span>Carregando...</span>
+    </div>
+    <div class="po-row">
+        <div class="po-md-12">
+            <h2>Feature Importance Random Forest</h2>
+        </div>
+        <div class="po-md-12">
+            <p>O Random Forest, por sua vez, utiliza bem mais os atributos. Isso pode ser um indicador de menor risco de
+                overfitting. Ainda assim, o GDP é a feature mais importante para o resultado do algoritmo, seguido por
+                HLE e
+                afetos positivos. </p>
+        </div>
+    </div>
+    <div echarts [options]="graphRfImportancesOptions" [merge]="updatedRfImportancesOptions"></div>
+    <div class="no-data" *ngIf="loadingMetrics">
+        <span>Carregando...</span>
+    </div>
+    <div class="po-row">
+        <div class="po-md-12">
+            <p>Diante dos dados apresentados, é possível concluir que obtivemos uma boa performance para a previsão do Score, validando nossa hipótese principal.</p>
+        </div>
+    </div>
 </po-page-default>

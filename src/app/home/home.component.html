@@ -33,13 +33,57 @@
     </div>
 
 
-    <div echarts [options]="graphOptions" [merge]="updatedOptions"></div>
+    <div echarts [options]="graphOptions" [merge]="updatedOptions" *ngIf="currentGraphData.length > 0"></div>
+    <div class="no-data" *ngIf="currentGraphData.length == 0">
+        <span *ngIf="!graphLoading">Não há dados para serem exibidos.</span>
+        <span *ngIf="graphLoading">Carregando...</span>
+    </div>
 
-    <h2>Matriz de correlação</h2>
-    <div id="corr_matrix" style="max-width: 90%; height: 900px; margin-left: 32px"></div>
-    <h2>Dados processados</h2>
-    <po-table [p-items]="view_items" (p-show-more)="onShowMore($event)" [p-loading]="tableLoading"
-        [p-loading-show-more]="showMoreLoading" [p-columns]="columns" p-container="shadow" [p-literals]="customLiterals"
-        [p-striped]="true" [p-sort]="true" (p-sort-by)="onTableSorting($event)">
-    </po-table>
+    <div class="po-row">
+        <div class="po-md-12">
+            <p>O gráfico acima mostra o comportamento das métricas ao longo do tempo na pesquisa. É possível filtrar por
+                região do mundo ou por um país. Note que os valores não possuem alterações significativas e mesmo
+                tendências de alta ou queda são bastante suaves.</p>
+        </div>
+    </div>
+
+
+    <div class="po-row">
+        <div class="po-md-12">
+            <h2>Matriz de correlação</h2>
+        </div>
+    </div>
+    <div class="po-row">
+        <div class="po-md-12">
+            <p>Abaixo podemos ver as correlações entre os dados. Ainda que não se possa extrair causalidade de
+                correlações, as mesmas se mostram dentro do que é possível esperar intuitivamente: GDP e o Score possuem
+                uma correção positiva, enquanto Freedom e Corruption negativa.</p>
+        </div>
+    </div>
+    <div class="po-row">
+        <div class="po-md-12" [hidden]="loadingCorrelations">
+            <div id="corr_matrix"></div>
+        </div>
+        <div class="po-md-12" *ngIf="loadingCorrelations">
+            <div class="no-data">
+                <span>Carregando...</span>
+            </div>
+        </div>
+    </div>
+    <div class="po-row">
+        <div class="po-md-12">
+            <h2>Dados processados</h2>
+        </div>
+        <div class="po-md-12">
+            <p>Por fim, segue a tabela com os dados completos para fins de consulta.</p>
+        </div>
+    </div>
+    <div class="po-row">
+        <div class="po-md-12">
+            <po-table [p-items]="view_items" (p-show-more)="onShowMore($event)" [p-loading]="tableLoading"
+                [p-loading-show-more]="showMoreLoading" [p-columns]="columns" p-container="shadow"
+                [p-literals]="customLiterals" [p-striped]="true" [p-sort]="true" (p-sort-by)="onTableSorting($event)">
+            </po-table>
+        </div>
+    </div>
 </po-page-default>

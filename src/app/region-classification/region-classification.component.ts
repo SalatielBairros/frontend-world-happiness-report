@@ -27,11 +27,8 @@ export class RegionClassificationComponent implements OnInit {
   ];
   public regions: Array<string> = [];
   public graphData: any = {};
-  public comparsionData: any = {};
   public graphOptions: any = null;
   public updatedOptions: any = null;
-  public balancedGraphOptions: any = null;
-  public balancedUpdatedOptions: any = null;
 
   constructor(public mlService: MlModelsService, public dataService: DataService) { }
 
@@ -80,18 +77,6 @@ export class RegionClassificationComponent implements OnInit {
 
         this.label_metrics.map(m => m.value).forEach(m => {
           this.graphData[m] = []
-          this.comparsionData[m] = []
-
-          let knn_series: Array<any> = []
-          this.regions.forEach(r => knn_series.push({
-            name: r,
-            value: [r, results[1].report_by_label[r][m]]
-          }));
-          this.graphData[m].push({
-            name: 'KNN',
-            type: 'bar',
-            data: knn_series
-          })
 
           let balanced_validation_knn_series: Array<any> = []
           this.regions.forEach(r => balanced_validation_knn_series.push({
@@ -104,29 +89,6 @@ export class RegionClassificationComponent implements OnInit {
             data: balanced_validation_knn_series
           }
           this.graphData[m].push(balanced_validation_knn);
-          this.comparsionData[m].push(balanced_validation_knn);
-
-          let balanced_test_knn_series: Array<any> = []
-          this.regions.forEach(r => balanced_test_knn_series.push({
-            name: r,
-            value: [r, results[2].test_data_evaluation.report_by_label[r][m]]
-          }));
-          this.comparsionData[m].push({
-            name: 'KNN Balanceado (Teste)',
-            type: 'bar',
-            data: balanced_test_knn_series
-          });
-
-          let randomForest_series: Array<any> = []
-          this.regions.forEach(r => randomForest_series.push({
-            name: r,
-            value: [r, results[3].report_by_label[r][m]]
-          }));
-          this.graphData[m].push({
-            name: 'Random Forest',
-            type: 'bar',
-            data: randomForest_series
-          });
 
           let balanced_randomForest_series: Array<any> = []
           this.regions.forEach(r => balanced_randomForest_series.push({
@@ -138,23 +100,10 @@ export class RegionClassificationComponent implements OnInit {
             type: 'bar',
             data: balanced_randomForest_series
           }
-          this.graphData[m].push(balanced_validation_rf);
-          this.comparsionData[m].push(balanced_validation_rf);
-
-          let balanced_test_rf_series: Array<any> = []
-          this.regions.forEach(r => balanced_test_rf_series.push({
-            name: r,
-            value: [r, results[4].test_data_evaluation.report_by_label[r][m]]
-          }));
-          this.comparsionData[m].push({
-            name: 'Random Forest Balanceado (Teste)',
-            type: 'bar',
-            data: balanced_test_rf_series
-          });
+          this.graphData[m].push(balanced_validation_rf);          
         });
 
         this.loadGraph(this.regions, this.graphData['precision']);
-        this.loadComparsionGraph(this.regions, this.comparsionData['precision']);
       },
       error: (err) => console.error(err),
       complete: () => console.log('All calls completed!')
@@ -165,13 +114,14 @@ export class RegionClassificationComponent implements OnInit {
     this.graphOptions = {
       xAxis: {
         type: 'category',
-        data: xAxis
+        data: xAxis,
+        show: false
       },
       yAxis: {
         type: 'value'
       },
       legend: {
-        data: ['KNN', 'KNN Balanceado', 'Random Forest', 'Random Forest Balanceado'],
+        data: ['KNN Balanceado', 'Random Forest Balanceado'],
         align: 'left',
       },
       grid: {
@@ -188,33 +138,6 @@ export class RegionClassificationComponent implements OnInit {
   public onMetricChange(event: any): void {
     this.updatedOptions = {
       series: this.graphData[event]
-    };
-    this.balancedUpdatedOptions = {
-      series: this.comparsionData[event]
-    };
-  }
-
-  private loadComparsionGraph(xAxis: string[], series: any[]) {
-    this.balancedGraphOptions = {
-      xAxis: {
-        type: 'category',
-        data: xAxis
-      },
-      yAxis: {
-        type: 'value'
-      },
-      legend: {
-        data: ['KNN Balanceado (Validação)', 'KNN Balanceado (Teste)', 'Random Forest Balanceado (Validação)', 'Random Forest Balanceado (Teste)'],
-        align: 'left',
-      },
-      grid: {
-        left: '0',
-        right: '4%',
-        bottom: '3%',
-        containLabel: true
-      },
-      series: series,
-      tooltip: {}
     };
   }
 
@@ -245,6 +168,20 @@ export class RegionClassificationComponent implements OnInit {
         showscale: false
       }
     ];
-    Plotly.newPlot(element, graph_data);
+
+    var layout = {      
+      margin: {
+        l: 150,
+        r: 50,
+        b: 0,
+        t: 50,
+        pad: 4
+      },
+      xaxis: {
+        showticklabels:false
+      }
+    };
+
+    Plotly.newPlot(element, graph_data, layout);
   }
 }

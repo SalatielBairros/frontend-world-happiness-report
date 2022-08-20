@@ -1,4 +1,18 @@
-<po-page-default p-title="Resultados modelos de classificação de região">    
+<po-page-default p-title="Resultados modelos de classificação de região">
+    <div class="po-row">
+        <div class="po-md-12">
+            <p>A segunda hipótese do projeto é a possibilidade de identificar a região do mundo através da relação entre
+                o Score de felicidade e os índices da pesquisa. Como o número de países das regiões é bastante variado,
+                a classificação dos dados por região do mundo poderia acabar contendo viéses para regiões com mais
+                países. Para evitar isso foi utilizado o método SMOTE de balanceamento dos dados, criando novos
+                registros das classes minoritárias através do KNN. Para validar a performance dos dados balanceados, 15%
+                dos dados originais foram separados antes do balanceamento como dados de validação.</p>
+        </div>
+        <div class="po-md-12">
+            <p>Para realizar a classificação foram utilizados os algoritmos KNN e Random Forest. Abaixo podemos ver a
+                performance de cada um deles por região do mundo medida através dos dados de validação.</p>
+        </div>
+    </div>
     <div class="po-row">
         <div class="po-md-3">
             <po-select name="metric" p-label="Métrica" p-placeholder="Precisão" (p-change)="onMetricChange($event)"
@@ -7,18 +21,31 @@
         </div>
     </div>
     <div style="max-width: 1200px; overflow: auto">
-        <div echarts [options]="graphOptions" [merge]="updatedOptions" [autoResize]="false" [initOpts]="{width: 2000 }">
+        <div echarts [options]="graphOptions" [merge]="updatedOptions" [autoResize]="false" [initOpts]="{width: 1200 }">
         </div>
     </div>
-    <h2>Dados Balanceados: (Teste vs Validação)</h2>
-    <div style="max-width: 1200px; overflow: auto">
-        <div echarts [options]="balancedGraphOptions" [merge]="balancedUpdatedOptions" [autoResize]="false" [initOpts]="{width: 2000 }">
+    <div class="po-row">
+        <div class="po-md-12">
+            <small>* Para visualizar o nome da região, passe o mouse sobre o gráfico.</small>
         </div>
     </div>
-    <h2>Matriz de confusão KNN (Dados balanceados - Validação)</h2>    
+
+    <div class="po-row">
+        <div class="po-md-12">
+            <h2>Matriz de confusão KNN</h2>
+        </div>
+    </div>
     <div id="knn_confusion_matrix"></div>
-    <h2>Matriz de confusão Random Forest (Dados balanceados - Validação)</h2>    
+    <div class="po-row">
+        <div class="po-md-12">
+            <h2>Matriz de confusão Random Forest</h2>
+        </div>
+    </div>
     <div id="rf_confusion_matrix"></div>
-    <h2>Feature Importances (Dados balanceados - Validação)</h2>
+    <div class="po-row">
+        <div class="po-md-12">
+            <h2>Feature Importances</h2>
+        </div>
+    </div>
     <div id="feature_importance_graph"></div>
 </po-page-default>
