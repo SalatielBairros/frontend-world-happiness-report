@@ -23,6 +23,8 @@ export class PandemicImpactComponent implements OnInit {
   public tableLoading: boolean = true;
   public showMoreLoading: boolean = false;
   public view_items: Array<CountryData> = [];
+  public currentGraphData: Array<number> = [];
+  public graphLoading: boolean = true;
   public columns: Array<PoTableColumn> = [
     {
       property: 'country',
@@ -125,6 +127,7 @@ export class PandemicImpactComponent implements OnInit {
           value: '',
           label: 'Selecione...'
         });
+        this.graphLoading = false;
       }
     });
   }
@@ -148,6 +151,7 @@ export class PandemicImpactComponent implements OnInit {
     this.service.getGroupedPandemicData('year', country, region).subscribe({
       next: (data) => {
         this.grouped_data = data;
+        this.currentGraphData = data.map(item => item.score);
         this.graphOptions = {
           xAxis: {
             type: 'category',
@@ -166,7 +170,7 @@ export class PandemicImpactComponent implements OnInit {
           series: [{
             name: 'Dados',
             type: 'line',
-            data: data.map(item => item.score)
+            data: this.currentGraphData
           }]
         };
       }
@@ -186,13 +190,19 @@ export class PandemicImpactComponent implements OnInit {
   }
 
   public onClickFilter(): void {
+    this.graphLoading = true;
+    if(this.selectedMetric == null || this.selectedMetric == '') {
+      this.selectedMetric = 'score';
+    }
     this.service.getGroupedPandemicData('year', this.selectedCountry, this.selectedRegion).subscribe({
       next: (data) => {
+        this.currentGraphData = data.map(x => (<any>x)[this.selectedMetric])
         this.updatedOptions = {
           series: [{
-            data: data.map(x => (<any>x)[this.selectedMetric])
+            data: this.currentGraphData
           }]
         };
+        this.graphLoading = false;
       }
     });
   }

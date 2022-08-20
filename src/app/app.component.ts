@@ -10,6 +10,7 @@ import { PoMenuItem } from '@po-ui/ng-components';
 export class AppComponent {
 
   public readonly AppName: string = 'World Happiness Report';
+  public readonly AppVersion: string = '1.0.0';
 
   readonly menus: Array<PoMenuItem> = [
     {

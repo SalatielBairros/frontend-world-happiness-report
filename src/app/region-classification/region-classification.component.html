@@ -28,24 +28,57 @@
         <div class="po-md-12">
             <small>* Para visualizar o nome da região, passe o mouse sobre o gráfico.</small>
         </div>
+        <div class="po-md-12 po-mt-1">
+            <p>Para mais informações e comparações (como por exemplo entre os dados de validação com os dados de teste),
+                utilize a API do projeto.</p>
+        </div>
     </div>
 
     <div class="po-row">
         <div class="po-md-12">
-            <h2>Matriz de confusão KNN</h2>
+            <h2>Visualizando a matrix de confusão</h2>
+        </div>
+        <div class="po-md-12">
+            <p>Abaixo podemos ver a matriz de confusão para os dados de validação dos dois modelos utilizados. Note que
+                o Random Forest performou consideravelmente melhor que o KNN.</p>
+        </div>
+        <div class="po-md-12">
+            <h3>KNN</h3>
         </div>
     </div>
     <div id="knn_confusion_matrix"></div>
-    <div class="po-row">
+    <div class="po-row po-mt-3">
         <div class="po-md-12">
-            <h2>Matriz de confusão Random Forest</h2>
+            <h3>Random Forest</h3>
         </div>
     </div>
     <div id="rf_confusion_matrix"></div>
     <div class="po-row">
-        <div class="po-md-12">
+        <div class="po-md-12 po-mt-3">
             <h2>Feature Importances</h2>
+        </div>
+        <div class="po-md-12">
+            <p>É notável como a explicação dos resultados dos modelos utilizados é diferente entre si. Enquanto o KNN
+                deu mais peso ao Score e ao GDP, o Random Forest foi mais equilibrado, dando maior peso ao HLE *.</p>
         </div>
     </div>
     <div id="feature_importance_graph"></div>
+    <div class="po-row">
+        <div class="po-md-12">
+            <small>* O HLE utilizado aqui foi escalado utilizando o Score. Mais informações sobre isso no repositório do
+                projeto no GitHub ou no Relatório Técnico.</small>
+        </div>
+    </div>
+    <div class="po-row">
+        <div class="po-md-12">
+            <h2>Conclusões</h2>
+        </div>
+        <div class="po-md-12">
+            <p>É notável que a percepção de felicidade varia por região, indicando a subjetividade essa percepção. No
+                entanto, dado a alta consideração do GDP nos modelos, não podemos afirmar que apenas critérios
+                subjetivos foram utilizados. Se a distribuição do GDP nos países das regiões for equânime dentro de cada
+                região, isso indicaria uma classificação mais pelo GDP que pelo Score. Indica-se então, para estudos
+                futuros, realizar esta modelagem sem o GDP e analisar a distribuição do GPD por região do mundo.</p>
+        </div>
+    </div>
 </po-page-default>

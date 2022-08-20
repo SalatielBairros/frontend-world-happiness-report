@@ -1,8 +1,8 @@
 <po-page-default p-title="Comportamento dos países na pandemia">
     <div class="po-row">
         <div class="po-md-3">
-            <po-select name="selectedMetric" p-label="Métrica para visualização"
-                p-placeholder="Score" (p-change)="onMetricChange($event)" [p-options]="[
+            <po-select name="selectedMetric" p-label="Métrica para visualização" p-placeholder="Score"
+                (p-change)="onMetricChange($event)" [p-options]="[
             { label: 'Score', value: 'score' },
             { label: 'GDP', value: 'gdp' },
             { label: 'HLE', value: 'hle' },
@@ -34,5 +34,23 @@
 
 
     <div echarts [options]="graphOptions" [merge]="updatedOptions"></div>
-    
+    <div class="no-data" *ngIf="currentGraphData.length == 0">
+        <span *ngIf="!graphLoading">Não há dados para serem exibidos.</span>
+        <span *ngIf="graphLoading">Carregando...</span>
+    </div>
+
+    <div class="po-row">
+        <div class="po-md-12">
+            <p>O gráfico acima é semelhante ao da visão geral dos dados. No entanto contem o histórico apenas dos países
+                presentes na pesquisa do ano 2020. Isso se dá devido à redução de quase 40 países da pesquisa de 2019
+                para a de 2020. Com isso, qualquer análise do impacto da pandemia realizado com o conjunto inteiro dos
+                dados traria um número distorcido.</p>
+            <p>Enquanto na visão geral dos dados o ano de 2020 apresenta um leve aumento na maior parte dos atributos,
+                quando observamos apenas os países presentes em 2020 isso não acontece. Os dados não parecem ter sido
+                afetados pela pandemia. Possivelmente países com valores mais baixos nos atributos não foram pesquisados
+                neste ano e, com isso, inviabilizando uma análise efetiva do impacto do COVID-19. O único atributo que
+                podemos notar uma alta significativa é o de Afeição Negativa.</p>
+        </div>
+    </div>
+
 </po-page-default>
